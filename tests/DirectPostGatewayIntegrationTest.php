@@ -24,7 +24,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
      */
     public function setUp()
     {
-        $this->gateway = new DirectPostGateway();
+        $this->gateway = new Gateway();
         $this->gateway->setUsername('demo');
         $this->gateway->setPassword('password');
 

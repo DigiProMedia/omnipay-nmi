@@ -9,7 +9,7 @@ use Omnipay\Common\AbstractGateway;
  * @link https://www.nmi.com/
  * @link https://gateway.perpetualpayments.com/merchants/resources/integration/integration_portal.php
  */
-class DirectPostGateway extends AbstractGateway
+class Gateway extends AbstractGateway
 {
     /**
      * @return string
