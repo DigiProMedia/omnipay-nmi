@@ -1,5 +1,5 @@
 {
-    "name": "mfauveau/omnipay-nmi",
+    "name": "digipro-media/omnipay-nmi",
     "type": "library",
     "description": "NMI (Network Merchants Inc.) driver for the Omnipay PHP payment processing library",
     "keywords": [
@@ -14,19 +14,31 @@
         "network",
         "inc"
     ],
-    "homepage": "https://github.com/mfauveau/omnipay-nmi",
+    "homepage": "https://github.com/Richtor/omnipay-nmi",
     "license": "MIT",
     "authors": [
         {
-            "name": "Matthieu Fauveau",
-            "email": "mfauveau@gmail.com"
+            "name": "Jason Hansen",
+            "email": "jason.a.hansen@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Richtor/omnipay-tests.git"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/DigiProMedia/recurring-payments.git"
         }
     ],
     "autoload": {
         "psr-4": { "Omnipay\\NMI\\" : "src/" }
     },
     "require": {
-        "omnipay/common": "~2.0"
+        "omnipay/common": "~2.0",
+        "php": ">=7.2",
+        "richtor/recurring-payments": "dev-master"
     },
     "require-dev": {
         "omnipay/tests": "~2.0"
@@ -35,5 +47,7 @@
         "branch-alias": {
             "dev-master": "2.0.x-dev"
         }
-    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }
