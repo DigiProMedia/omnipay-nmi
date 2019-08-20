@@ -29,7 +29,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
         $this->gateway->setPassword('password');
 
         $this->purchaseOptions = [
-           'amount' => random_int(1, 100) / 10,
+           'amount' => (random_int(1, 900) / 100) + 1,
            'card' => $this->getValidCard()
         ];
     }
