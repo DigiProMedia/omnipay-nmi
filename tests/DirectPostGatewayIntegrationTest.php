@@ -29,7 +29,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
         $this->gateway->setPassword('password');
 
         $this->purchaseOptions = [
-           'amount' => random_int(1, 100)/10,
+           'amount' => random_int(1, 100) / 10,
            'card' => $this->getValidCard()
         ];
     }
@@ -41,8 +41,8 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
     {
         $response = $this->gateway->authorize($this->purchaseOptions)->send();
 
-        $this->assertTrue($response->isSuccessful());
         $this->assertEquals('SUCCESS', $response->getMessage());
+        $this->assertTrue($response->isSuccessful());
 
         $captureResponse = $this->gateway->capture([
            'amount' => '1.00',
