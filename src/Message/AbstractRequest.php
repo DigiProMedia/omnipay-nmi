@@ -1,5 +1,10 @@
 <?php
 namespace Omnipay\NMI\Message;
+use Guzzle\Http\Exception\BadResponseException;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use RecurringPayment\Database;
+use RecurringPayment\EnvironmentalConfig;
 
 /**
 * NMI Abstract Request
@@ -324,11 +329,27 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $data;
     }
 
+    public function getRecurringReference()
+    {
+        return $this->getParameter('recurringReference');
+    }
+
+    public function setRecurringReference($value)
+    {
+        return $this->setParameter('recurringReference', $value);
+    }
+
     public function sendData($data)
     {
-        $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $data)->send();
-
-        return $this->response = new DirectPostResponse($this, $httpResponse->getBody());
+        try {
+            $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $data)->send();
+        } catch (BadResponseException $e) {
+            $response = $e->getResponse();
+        } finally {
+            $this->response = new DirectPostResponse($this, $httpResponse->getBody());
+            $this->logAPICall('POST', $this->getEndpoint(), null, $data, $httpResponse, $this->response);
+            return $this->response;
+        }
     }
 
     public function setEndpoint($value)
@@ -339,5 +360,87 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function getEndpoint()
     {
         return $this->endpoint;
+    }
+
+    public function getIsLoggingEnabled()
+    {
+        return $this->getParameter('isLoggingEnabled') ?? false;
+    }
+
+    public function setIsLoggingEnabled($value)
+    {
+        return $this->setParameter('isLoggingEnabled', $value);
+    }
+
+    private function isLoggingEnabled()
+    {
+        return $this->getIsLoggingEnabled();
+    }
+
+    protected function logAPICall($method, $url, $headers, $requestData, $httpResponse, $responseObject = null)
+    {
+        $wasCallSuccessful = $responseObject !== null && $responseObject->isSuccessful();
+        if ($wasCallSuccessful && !$this->isLoggingEnabled()) {
+            return;
+        }
+
+        $loggerData = [
+           'request' => [
+              'method' => $method,
+              'url' => $url,
+              'headers' => null,
+              'data' => $this->getScrubbedData($requestData)
+           ],
+           'response' => [
+              'statusCode' => $httpResponse->getStatusCode(),
+              'status' => $httpResponse->getReasonPhrase(),
+              'body' => $this->getScrubbedData($this->JSONifyResponseBody($httpResponse->getBody(true)))
+           ]
+        ];
+
+        $logPath = EnvironmentalConfig::getLogPath();
+        $log = new Logger('WePay');
+        $log->pushHandler(new StreamHandler($logPath . '/WePay.log', Logger::INFO));
+        $dbConfig = new Database();
+        $db = $dbConfig->getDb();
+        $statement = $db->prepare('
+          INSERT INTO gateway_error_log (gateway, recurring_payment_id, request, response) 
+          VALUES (:gateway, :recurring_payment_id, :request, :response)
+        ');
+        $statement->execute([
+           'gateway' => 'WePay',
+           'recurring_payment_id' => $this->getRecurringReference(),
+           'request' => json_encode($loggerData['request']),
+           'response' => json_encode($loggerData['response'])
+        ]);
+        $log->info('WePay API Call', $loggerData);
+    }
+
+    private function getScrubbedData($currentData)
+    {
+        $scrubbedData = $currentData;
+        if (isset($currentData['password'])) {
+            $scrubbedData['password'] = $this->maskNumberWithAsterisks($currentData['password']);
+        }
+        return $scrubbedData;
+    }
+
+    private function maskNumberWithAsterisks($number)
+    {
+        $number = (string)$number;
+        if (strlen($number) >= 4) {
+            $maskedNumber = str_repeat('*', strlen($number) - 4) . substr($number, -4);
+        } else {
+            return '****';
+        }
+        return $maskedNumber;
+    }
+
+    private function JSONifyResponseBody($body)
+    {
+        $bodyAsArray = [];
+        parse_str($body, $bodyAsArray);
+        return $bodyAsArray;
+
     }
 }
