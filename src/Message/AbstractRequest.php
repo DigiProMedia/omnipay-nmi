@@ -399,8 +399,8 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         ];
 
         $logPath = EnvironmentalConfig::getLogPath();
-        $log = new Logger('WePay');
-        $log->pushHandler(new StreamHandler($logPath . '/WePay.log', Logger::INFO));
+        $log = new Logger('NMI');
+        $log->pushHandler(new StreamHandler($logPath . '/NMI.log', Logger::INFO));
         $dbConfig = new Database();
         $db = $dbConfig->getDb();
         $statement = $db->prepare('
@@ -408,12 +408,12 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
           VALUES (:gateway, :recurring_payment_id, :request, :response)
         ');
         $statement->execute([
-           'gateway' => 'WePay',
+           'gateway' => 'NMI',
            'recurring_payment_id' => $this->getRecurringReference(),
            'request' => json_encode($loggerData['request']),
            'response' => json_encode($loggerData['response'])
         ]);
-        $log->info('WePay API Call', $loggerData);
+        $log->info('NMI API Call', $loggerData);
     }
 
     private function getScrubbedData($currentData)
