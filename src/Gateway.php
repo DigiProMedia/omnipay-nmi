@@ -2,6 +2,18 @@
 namespace Omnipay\NMI;
 
 use Omnipay\Common\AbstractGateway;
+use Omnipay\NMI\Message\DeleteRecurringRequest;
+use Omnipay\NMI\Message\RecurringRequest;
+use Omnipay\NMI\Message\DirectPostDeleteCardRequest;
+use Omnipay\NMI\Message\DirectPostUpdateCardRequest;
+use Omnipay\NMI\Message\DirectPostCreateCardRequest;
+use Omnipay\NMI\Message\DirectPostCreditRequest;
+use Omnipay\NMI\Message\DirectPostRefundRequest;
+use Omnipay\NMI\Message\DirectPostVoidRequest;
+use Omnipay\NMI\Message\DirectPostCaptureRequest;
+use Omnipay\NMI\Message\DirectPostAuthRequest;
+use Omnipay\NMI\Message\DirectPostSaleRequest;
+use Omnipay\NMI\Message\UpdateRecurringRequest;
 
 /**
  * NMI Direct Post Gateway
@@ -298,7 +310,7 @@ class Gateway extends AbstractGateway
      */
     public function sale(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NMI\Message\DirectPostSaleRequest', $parameters);
+        return $this->createRequest(DirectPostSaleRequest::class, $parameters);
     }
 
     /**
@@ -311,7 +323,7 @@ class Gateway extends AbstractGateway
      */
     public function auth(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NMI\Message\DirectPostAuthRequest', $parameters);
+        return $this->createRequest(DirectPostAuthRequest::class, $parameters);
     }
 
     /**
@@ -323,7 +335,7 @@ class Gateway extends AbstractGateway
      */
     public function capture(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NMI\Message\DirectPostCaptureRequest', $parameters);
+        return $this->createRequest(DirectPostCaptureRequest::class, $parameters);
     }
 
     /**
@@ -335,7 +347,7 @@ class Gateway extends AbstractGateway
      */
     public function void(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NMI\Message\DirectPostVoidRequest', $parameters);
+        return $this->createRequest(DirectPostVoidRequest::class, $parameters);
     }
 
     /**
@@ -346,7 +358,7 @@ class Gateway extends AbstractGateway
      */
     public function refund(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NMI\Message\DirectPostRefundRequest', $parameters);
+        return $this->createRequest(DirectPostRefundRequest::class, $parameters);
     }
 
     /**
@@ -358,7 +370,7 @@ class Gateway extends AbstractGateway
      */
     public function credit(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NMI\Message\DirectPostCreditRequest', $parameters);
+        return $this->createRequest(DirectPostCreditRequest::class, $parameters);
     }
 
     /**
@@ -367,7 +379,7 @@ class Gateway extends AbstractGateway
      */
     public function createCard(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NMI\Message\DirectPostCreateCardRequest', $parameters);
+        return $this->createRequest(DirectPostCreateCardRequest::class, $parameters);
     }
 
     /**
@@ -376,7 +388,7 @@ class Gateway extends AbstractGateway
      */
     public function updateCard(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NMI\Message\DirectPostUpdateCardRequest', $parameters);
+        return $this->createRequest(DirectPostUpdateCardRequest::class, $parameters);
     }
 
     /**
@@ -385,6 +397,18 @@ class Gateway extends AbstractGateway
      */
     public function deleteCard(array $parameters = array())
     {
-        return $this->createRequest('\Omnipay\NMI\Message\DirectPostDeleteCardRequest', $parameters);
+        return $this->createRequest(DirectPostDeleteCardRequest::class, $parameters);
+    }
+
+    public function createRecurring(array $params = []) {
+        return $this->createRequest(RecurringRequest::class, $params);
+    }
+
+    public function updateRecurring(array $params = []) {
+        return $this->createRequest(UpdateRecurringRequest::class, $params);
+    }
+
+    public function deleteRecurring(array $params = []) {
+        return $this->createRequest(DeleteRecurringRequest::class, $params);
     }
 }
