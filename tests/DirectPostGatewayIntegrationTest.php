@@ -326,6 +326,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
         $response = $this->gateway->UpdateRecurring($recurringData)->send();
         static::assertSame('Invalid recurringReference.', $response->getMessage());
         static::assertEquals('00', $response->getCode());
+        static::assertEmpty($response->getTransactionReference());
         static::assertFalse($response->isSuccessful());
     }
 

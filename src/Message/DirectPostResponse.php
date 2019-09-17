@@ -58,7 +58,11 @@ class DirectPostResponse extends AbstractResponse
 
     public function getTransactionReference()
     {
-        return trim($this->data['transactionid']);
+        if (isset($this->data['transactionid'])) {
+            return trim($this->data['transactionid']);
+        }
+
+        return null;
     }
 
     public function getCardReference()
