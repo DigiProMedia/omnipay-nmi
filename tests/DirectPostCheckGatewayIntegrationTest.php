@@ -15,11 +15,12 @@ use RecurringPayment\RecurringPayment as RecurringPayment;
  *
  * @package Omnipay\NMI
  */
-class DirectPostGatewayIntegrationTest extends GatewayTestCase
+class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
 {
     /** @var  DirectPostGateway */
     protected $gateway;
     /** @var  array */
+    protected $checkOptions;
     protected $purchaseOptions;
 
     /**
@@ -31,9 +32,20 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
         $this->gateway->setUsername('demo');
         $this->gateway->setPassword('password');
 
+        $this->checkOptions = [
+           'bankAccount' => [
+              'number' => '1234567890',
+              'ownershipType' => 'Business',
+              'type' => 'Checking',
+              'bankName' => 'Stark 1st National Bank',
+              'routingNumber' => '655060042',
+              'name' => 'Test Person',
+              'email' => 'test@test.com'
+           ],
+        ];
         $this->purchaseOptions = [
            'amount' => (random_int(1, 900) / 100) + 1,
-           'card' => $this->getValidCard()
+           'bankAccount' => $this->checkOptions['bankAccount']
         ];
     }
 
@@ -56,13 +68,13 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
         $this->assertEquals('SUCCESS', $captureResponse->getMessage());
     }
 
-    public function testCreateCardSuccess()
+    public function testCreateCheckSuccess()
     {
-        $response = $this->gateway->createCard($this->purchaseOptions)->send();
+        $response = $this->gateway->createCheck($this->purchaseOptions)->send();
 
         $this->assertTrue($response->isSuccessful());
         $this->assertEquals('Customer Added', $response->getMessage());
-        return $response->getCardReference();
+        return $response->getCheckReference();
     }
 
     /**
@@ -118,7 +130,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
            'totalCount' => '3',
            'frequency' => 'Yearly',
            'description' => 'unittest',
-           'cardReference' => $this->testCreateCardSuccess(),
+           'checkReference' => $this->testCreateCheckSuccess(),
            'locationID' => 13579,
            'subDomain' => 'http://www.test.com',
            'email' => 'test@testDigiProMedia.com'
@@ -192,7 +204,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
     public function testCreateRecurringPaymentFailed()
     {
         $data = $this->getValidRecurringData();
-        $data['cardReference'] = 'fakefake!!';
+        $data['checkReference'] = 'fakefake!!';
         $this->gateway->setTestMode(false); //Force failure
         $response = $this->gateway->createRecurring($data)->send();
         static::assertStringStartsWith('Invalid Customer Vault ID specified REFID:', $response->getMessage());
@@ -203,7 +215,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
         static::assertNull($response->getTransactionReference());
     }
 
-    public function testCreateRecurringPaymentFailedBadCardRef()
+    public function testCreateRecurringPaymentFailedBadCheckRef()
     {
         $data = [
            'startDate' => date('Y-m-d'),
@@ -211,7 +223,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
            'totalCount' => '3',
            'frequency' => 'Yearly',
            'description' => 'unittest',
-           'cardReference' => 'fakefakefake',
+           'checkReference' => 'fakefakefake',
            'locationID' => 13579,
            'subDomain' => 'http://www.test.com',
            'email' => 'test@testDigiProMedia.com'
@@ -249,7 +261,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
         static::assertEquals($recurringData['description'], $postUpdatedPayment->description);
         static::assertEquals($recurringData['recurringReference'], $postUpdatedPayment->id);
         static::assertEquals($preUpdatedPayment->start_date, $postUpdatedPayment->start_date);
-        static::assertEquals($preUpdatedPayment->card_reference, $postUpdatedPayment->card_reference);
+        static::assertEquals($preUpdatedPayment->check_reference, $postUpdatedPayment->check_reference);
         static::assertEquals($preUpdatedPayment->gateway, $postUpdatedPayment->gateway);
         static::assertEquals($preUpdatedPayment->gateway_password, $postUpdatedPayment->gateway_password);
         static::assertEquals($preUpdatedPayment->gateway_username, $postUpdatedPayment->gateway_username);
@@ -330,7 +342,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
         static::assertFalse($response->isSuccessful());
     }
 
-    private function getRecurringOptions($cardReference, $frequency = '1')
+    private function getRecurringOptions($checkReference, $frequency = '1')
     {
         $requestParams = [
            'startDate' => '12/12/2019',
@@ -338,7 +350,7 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
            'totalCount' => '3',
            'description' => 'Test Description',
            'frequency' => $frequency,
-           'cardReference' => $cardReference
+           'checkReference' => $checkReference
         ];
         return $requestParams;
     }
@@ -376,11 +388,11 @@ class DirectPostGatewayIntegrationTest extends GatewayTestCase
         return $response;
     }
 
-    public function testPurchaseSavedCardSuccess()
+    public function testPurchaseSavedCheckSuccess()
     {
-        $cardReference = $this->testCreateCardSuccess();
+        $checkReference = $this->testCreateCheckSuccess();
         $requestData = [
-           'cardReference' => $cardReference,
+           'checkReference' => $checkReference,
            'amount' => '1.00',
         ];
 

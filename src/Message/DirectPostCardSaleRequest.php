@@ -4,7 +4,7 @@ namespace Omnipay\NMI\Message;
 /**
 * NMI Direct Post Sale Request
 */
-class DirectPostSaleRequest extends DirectPostAuthRequest
+class DirectPostCardSaleRequest extends DirectPostAuthRequest
 {
     protected $type = 'sale';
 }

@@ -3,6 +3,7 @@ namespace Omnipay\NMI;
 
 use Omnipay\Common\AbstractGateway;
 use Omnipay\NMI\Message\DeleteRecurringRequest;
+use Omnipay\NMI\Message\DirectPostCheckSaleRequest;
 use Omnipay\NMI\Message\RecurringRequest;
 use Omnipay\NMI\Message\DirectPostDeleteCardRequest;
 use Omnipay\NMI\Message\DirectPostUpdateCardRequest;
@@ -12,7 +13,7 @@ use Omnipay\NMI\Message\DirectPostRefundRequest;
 use Omnipay\NMI\Message\DirectPostVoidRequest;
 use Omnipay\NMI\Message\DirectPostCaptureRequest;
 use Omnipay\NMI\Message\DirectPostAuthRequest;
-use Omnipay\NMI\Message\DirectPostSaleRequest;
+use Omnipay\NMI\Message\DirectPostCardSaleRequest;
 use Omnipay\NMI\Message\UpdateRecurringRequest;
 
 /**
@@ -306,11 +307,15 @@ class Gateway extends AbstractGateway
     /**
      * Transaction sales are submitted and immediately flagged for settlement.
      * @param  array  $parameters
-     * @return \Omnipay\NMI\Message\DirectPostSaleRequest
+     * @return DirectPostSaleRequest
      */
     public function sale(array $parameters = array())
     {
-        return $this->createRequest(DirectPostSaleRequest::class, $parameters);
+        if(isset($parameters['bankAccount'])){
+            return $this->createRequest(Message\DirectPostCheckSaleRequest::class, $parameters);
+        } else {
+            return $this->createRequest(Message\DirectPostCardSaleRequest::class, $parameters);
+        }
     }
 
     /**
