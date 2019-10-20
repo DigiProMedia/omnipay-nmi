@@ -1,9 +1,10 @@
 <?php
+
 namespace Omnipay\NMI\Message;
 
 /**
-* NMI Direct Post Sale Request
-*/
+ * NMI Direct Post Sale Request
+ */
 class DirectPostCheckSaleRequest extends DirectPostAuthRequest
 {
     protected $type = 'sale';
@@ -13,18 +14,16 @@ class DirectPostCheckSaleRequest extends DirectPostAuthRequest
         $data = parent::getData();
         $data['payment'] = 'check';
         return $data;
-
-
     }
 
+    //TODO: Remove Duplicate code below
     protected function getPaymentData(): array
     {
-        $this->getCheck()->validate();
-
+        $this->validateBankAccount();
         return [
-           'checkname' => $this->getCheck()->getAccountName(),
-           'checkaba' => $this->getCheck()->getRoutingNumber(),
-           'checkaccount' => $this->getCheck()->getAccountNumber(),
+           'checkname' => $this->getBankAccount()['name'],
+           'checkaba' => $this->getBankAccount()['routingNumber'],
+           'checkaccount' => $this->getBankAccount()['number']
         ];
     }
 }

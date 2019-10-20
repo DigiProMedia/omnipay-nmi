@@ -203,6 +203,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('ponumber', $value);
     }
 
+    public function getBankAccount()
+    {
+        return $this->getParameter('bankAccount');
+    }
+
+    public function setBankAccount($value)
+    {
+        return $this->setParameter('bankAccount', $value);
+    }
+
     protected function getBaseData()
     {
         $data = array();
@@ -339,6 +349,16 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         return $this->setParameter('recurringReference', $value);
     }
 
+    public function getCheckReference()
+    {
+        return $this->getParameter('checkReference');
+    }
+
+    public function setCheckReference($value)
+    {
+        return $this->setParameter('checkReference', $value);
+    }
+
     public function sendData($data)
     {
         try {
@@ -375,6 +395,26 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     private function isLoggingEnabled()
     {
         return $this->getIsLoggingEnabled();
+    }
+
+    protected function validateBankAccount()
+    {
+        $bankAccountInfo = $this->getBankAccount();
+        foreach (['name', 'routingNumber', 'number'] as $key) {
+            if (!isset($bankAccountInfo[$key])) {
+                throw new InvalidRequestException("The $key parameter is required");
+            }
+        }
+    }
+
+    protected function getCheckPaymentData(): array
+    {
+        $this->validateBankAccount();
+        return [
+           'checkname' => $this->getBankAccount()['name'],
+           'checkaba' => $this->getBankAccount()['routingNumber'],
+           'checkaccount' => $this->getBankAccount()['number']
+        ];
     }
 
     protected function logAPICall($method, $url, $headers, $requestData, $httpResponse, $responseObject = null)

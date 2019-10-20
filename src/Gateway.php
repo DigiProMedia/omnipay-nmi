@@ -3,7 +3,10 @@ namespace Omnipay\NMI;
 
 use Omnipay\Common\AbstractGateway;
 use Omnipay\NMI\Message\DeleteRecurringRequest;
+use Omnipay\NMI\Message\DirectPostCardSaleRequest;
+use Omnipay\NMI\Message\DirectPostCheckAuthRequest;
 use Omnipay\NMI\Message\DirectPostCheckSaleRequest;
+use Omnipay\NMI\Message\DirectPostCreateCheckRequest;
 use Omnipay\NMI\Message\RecurringRequest;
 use Omnipay\NMI\Message\DirectPostDeleteCardRequest;
 use Omnipay\NMI\Message\DirectPostUpdateCardRequest;
@@ -13,7 +16,6 @@ use Omnipay\NMI\Message\DirectPostRefundRequest;
 use Omnipay\NMI\Message\DirectPostVoidRequest;
 use Omnipay\NMI\Message\DirectPostCaptureRequest;
 use Omnipay\NMI\Message\DirectPostAuthRequest;
-use Omnipay\NMI\Message\DirectPostCardSaleRequest;
 use Omnipay\NMI\Message\UpdateRecurringRequest;
 
 /**
@@ -312,9 +314,9 @@ class Gateway extends AbstractGateway
     public function sale(array $parameters = array())
     {
         if(isset($parameters['bankAccount'])){
-            return $this->createRequest(Message\DirectPostCheckSaleRequest::class, $parameters);
+            return $this->createRequest(DirectPostCheckSaleRequest::class, $parameters);
         } else {
-            return $this->createRequest(Message\DirectPostCardSaleRequest::class, $parameters);
+            return $this->createRequest(DirectPostCardSaleRequest::class, $parameters);
         }
     }
 
@@ -328,7 +330,11 @@ class Gateway extends AbstractGateway
      */
     public function auth(array $parameters = array())
     {
-        return $this->createRequest(DirectPostAuthRequest::class, $parameters);
+        if(isset($parameters['bankAccount'])){
+            return $this->createRequest(DirectPostCheckAuthRequest::class, $parameters);
+        } else {
+            return $this->createRequest(DirectPostAuthRequest::class, $parameters);
+        }
     }
 
     /**
@@ -385,6 +391,11 @@ class Gateway extends AbstractGateway
     public function createCard(array $parameters = array())
     {
         return $this->createRequest(DirectPostCreateCardRequest::class, $parameters);
+    }
+
+    public function createCheck(array $parameters = array())
+    {
+        return $this->createRequest(DirectPostCreateCheckRequest::class, $parameters);
     }
 
     /**

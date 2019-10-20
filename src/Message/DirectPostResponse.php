@@ -1,13 +1,13 @@
 <?php
+
 namespace Omnipay\NMI\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;
-use Omnipay\Common\Exception\InvalidResponseException;
 
 /**
-* NMI Direct Post Response
-*/
+ * NMI Direct Post Response
+ */
 class DirectPostResponse extends AbstractResponse
 {
     public function __construct(RequestInterface $request, $data)
@@ -72,5 +72,10 @@ class DirectPostResponse extends AbstractResponse
         }
 
         return null;
+    }
+
+    public function getCheckReference()
+    {
+        return $this->getCardReference();
     }
 }
