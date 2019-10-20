@@ -24,7 +24,7 @@ class RecurringRequest extends AbstractRequest
            'description' => $this->getDescription() ?? 'Recurring Payment',
            'total_count' => $this->getTotalCount(),
            'amount' => $this->getAmount(),
-           'card_reference' => $this->getPaymentReference(),
+           $this->getPaymentReferenceName() => $this->getPaymentReference(),
            'gateway' => $this->getGatewayName(),
            'gateway_url' => $this->getURL(),
            'gateway_username' => $this->getUserName(),
@@ -66,7 +66,7 @@ class RecurringRequest extends AbstractRequest
 
     protected function verifyRequiredParameters()
     {
-        $this->validate('frequency', 'startDate', 'totalCount', 'email');
+        $this->validate('frequency', 'startDate', 'totalCount', 'email', 'amount');
     }
 
     private function lookUpFrequency($value)
@@ -276,5 +276,10 @@ class RecurringRequest extends AbstractRequest
     public function setCommission($value)
     {
         return $this->setParameter('commission', $value);
+    }
+
+    protected function getPaymentReferenceName(): string
+    {
+        return 'card_reference';
     }
 }

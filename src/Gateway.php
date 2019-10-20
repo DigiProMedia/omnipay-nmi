@@ -1,21 +1,22 @@
 <?php
+
 namespace Omnipay\NMI;
 
 use Omnipay\Common\AbstractGateway;
 use Omnipay\NMI\Message\DeleteRecurringRequest;
-use Omnipay\NMI\Message\DirectPostCardSaleRequest;
-use Omnipay\NMI\Message\DirectPostCheckAuthRequest;
-use Omnipay\NMI\Message\DirectPostCheckSaleRequest;
-use Omnipay\NMI\Message\DirectPostCreateCheckRequest;
-use Omnipay\NMI\Message\RecurringRequest;
-use Omnipay\NMI\Message\DirectPostDeleteCardRequest;
-use Omnipay\NMI\Message\DirectPostUpdateCardRequest;
-use Omnipay\NMI\Message\DirectPostCreateCardRequest;
-use Omnipay\NMI\Message\DirectPostCreditRequest;
-use Omnipay\NMI\Message\DirectPostRefundRequest;
-use Omnipay\NMI\Message\DirectPostVoidRequest;
-use Omnipay\NMI\Message\DirectPostCaptureRequest;
 use Omnipay\NMI\Message\DirectPostAuthRequest;
+use Omnipay\NMI\Message\DirectPostCaptureRequest;
+use Omnipay\NMI\Message\DirectPostCardSaleRequest;
+use Omnipay\NMI\Message\DirectPostCheckSaleRequest;
+use Omnipay\NMI\Message\DirectPostCreateCardRequest;
+use Omnipay\NMI\Message\DirectPostCreateCheckRequest;
+use Omnipay\NMI\Message\DirectPostCreditRequest;
+use Omnipay\NMI\Message\DirectPostDeleteCardRequest;
+use Omnipay\NMI\Message\DirectPostRefundRequest;
+use Omnipay\NMI\Message\DirectPostUpdateCardRequest;
+use Omnipay\NMI\Message\DirectPostVoidRequest;
+use Omnipay\NMI\Message\RecurringCheckRequest;
+use Omnipay\NMI\Message\RecurringRequest;
 use Omnipay\NMI\Message\UpdateRecurringRequest;
 
 /**
@@ -39,10 +40,10 @@ class Gateway extends AbstractGateway
      */
     public function getDefaultParameters()
     {
-        return array(
-            'username' => '',
-            'password' => ''
-        );
+        return [
+           'username' => '',
+           'password' => ''
+        ];
     }
 
     /**
@@ -54,7 +55,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setUsername($value)
@@ -71,7 +72,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setPassword($value)
@@ -88,7 +89,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setProcessorId($value)
@@ -105,7 +106,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setAuthorizationCode($value)
@@ -122,7 +123,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setDescriptor($value)
@@ -139,7 +140,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setDescriptorPhone($value)
@@ -156,7 +157,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setDescriptorAddress($value)
@@ -173,7 +174,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setDescriptorCity($value)
@@ -190,7 +191,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setDescriptorState($value)
@@ -207,7 +208,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setDescriptorPostal($value)
@@ -224,7 +225,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setDescriptorCountry($value)
@@ -241,7 +242,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setDescriptorMcc($value)
@@ -258,7 +259,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setDescriptorMerchantId($value)
@@ -288,7 +289,7 @@ class Gateway extends AbstractGateway
     }
 
     /**
-     * @param  string $value
+     * @param string $value
      * @return $this
      */
     public function setEndpoint($value)
@@ -296,24 +297,24 @@ class Gateway extends AbstractGateway
         return $this->setParameter('endpoint', $value);
     }
 
-    public function purchase(array $parameters = array())
+    public function purchase(array $parameters = [])
     {
         return $this->sale($parameters);
     }
 
-    public function authorize(array $parameters = array())
+    public function authorize(array $parameters = [])
     {
         return $this->auth($parameters);
     }
 
     /**
      * Transaction sales are submitted and immediately flagged for settlement.
-     * @param  array  $parameters
+     * @param array $parameters
      * @return DirectPostSaleRequest
      */
-    public function sale(array $parameters = array())
+    public function sale(array $parameters = [])
     {
-        if(isset($parameters['bankAccount'])){
+        if (isset($parameters['bankAccount'])) {
             return $this->createRequest(DirectPostCheckSaleRequest::class, $parameters);
         } else {
             return $this->createRequest(DirectPostCardSaleRequest::class, $parameters);
@@ -325,26 +326,22 @@ class Gateway extends AbstractGateway
      * for settlement. These transactions must be flagged for settlement using
      * the capture transaction type. Authorizations typically remain active for
      * three to seven business days.
-     * @param  array  $parameters
+     * @param array $parameters
      * @return \Omnipay\NMI\Message\DirectPostAuthRequest
      */
-    public function auth(array $parameters = array())
+    public function auth(array $parameters = [])
     {
-        if(isset($parameters['bankAccount'])){
-            return $this->createRequest(DirectPostCheckAuthRequest::class, $parameters);
-        } else {
-            return $this->createRequest(DirectPostAuthRequest::class, $parameters);
-        }
+        return $this->createRequest(DirectPostAuthRequest::class, $parameters);
     }
 
     /**
      * Transaction captures flag existing authorizations for settlement.
      * Only authorizations can be captured. Captures can be submitted for an
      * amount equal to or less than the original authorization.
-     * @param  array  $parameters
+     * @param array $parameters
      * @return \Omnipay\NMI\Message\DirectPostCaptureRequest
      */
-    public function capture(array $parameters = array())
+    public function capture(array $parameters = [])
     {
         return $this->createRequest(DirectPostCaptureRequest::class, $parameters);
     }
@@ -353,10 +350,10 @@ class Gateway extends AbstractGateway
      * Transaction voids will cancel an existing sale or captured authorization.
      * In addition, non-captured authorizations can be voided to prevent any
      * future capture. Voids can only occur if the transaction has not been settled.
-     * @param  array  $parameters
+     * @param array $parameters
      * @return \Omnipay\NMI\Message\DirectPostVoidRequest
      */
-    public function void(array $parameters = array())
+    public function void(array $parameters = [])
     {
         return $this->createRequest(DirectPostVoidRequest::class, $parameters);
     }
@@ -364,10 +361,10 @@ class Gateway extends AbstractGateway
     /**
      * Transaction refunds will reverse a previously settled transaction. If the
      * transaction has not been settled, it must be voided instead of refunded.
-     * @param  array  $parameters
+     * @param array $parameters
      * @return \Omnipay\NMI\Message\DirectPostRefundRequest
      */
-    public function refund(array $parameters = array())
+    public function refund(array $parameters = [])
     {
         return $this->createRequest(DirectPostRefundRequest::class, $parameters);
     }
@@ -376,10 +373,10 @@ class Gateway extends AbstractGateway
      * Transaction credits apply an amount to the cardholder's card that was not
      * originally processed through the Gateway. In most situations credits are
      * disabled as transaction refunds should be used instead.
-     * @param  array  $parameters
+     * @param array $parameters
      * @return \Omnipay\NMI\Message\DirectPostCreditRequest
      */
-    public function credit(array $parameters = array())
+    public function credit(array $parameters = [])
     {
         return $this->createRequest(DirectPostCreditRequest::class, $parameters);
     }
@@ -388,12 +385,12 @@ class Gateway extends AbstractGateway
      * @param array $parameters
      * @return \Omnipay\NMI\Message\CreateCardRequest
      */
-    public function createCard(array $parameters = array())
+    public function createCard(array $parameters = [])
     {
         return $this->createRequest(DirectPostCreateCardRequest::class, $parameters);
     }
 
-    public function createCheck(array $parameters = array())
+    public function createCheck(array $parameters = [])
     {
         return $this->createRequest(DirectPostCreateCheckRequest::class, $parameters);
     }
@@ -402,7 +399,7 @@ class Gateway extends AbstractGateway
      * @param array $parameters
      * @return \Omnipay\NMI\Message\UpdateCardRequest
      */
-    public function updateCard(array $parameters = array())
+    public function updateCard(array $parameters = [])
     {
         return $this->createRequest(DirectPostUpdateCardRequest::class, $parameters);
     }
@@ -411,20 +408,27 @@ class Gateway extends AbstractGateway
      * @param array $parameters
      * @return \Omnipay\NMI\Message\DeleteCardRequest
      */
-    public function deleteCard(array $parameters = array())
+    public function deleteCard(array $parameters = [])
     {
         return $this->createRequest(DirectPostDeleteCardRequest::class, $parameters);
     }
 
-    public function createRecurring(array $params = []) {
-        return $this->createRequest(RecurringRequest::class, $params);
+    public function createRecurring(array $params = [])
+    {
+        if (isset($params['checkReference'])) {
+            return $this->createRequest(RecurringCheckRequest::class, $params);
+        } else {
+            return $this->createRequest(RecurringRequest::class, $params);
+        }
     }
 
-    public function updateRecurring(array $params = []) {
+    public function updateRecurring(array $params = [])
+    {
         return $this->createRequest(UpdateRecurringRequest::class, $params);
     }
 
-    public function deleteRecurring(array $params = []) {
+    public function deleteRecurring(array $params = [])
+    {
         return $this->createRequest(DeleteRecurringRequest::class, $params);
     }
 }

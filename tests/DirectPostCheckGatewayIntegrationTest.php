@@ -17,7 +17,7 @@ use RecurringPayment\RecurringPayment as RecurringPayment;
  */
 class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
 {
-    //TODO: 14 fail, 31 pass
+    //TODO: 5 fail, 39 pass
 
     /** @var  DirectPostGateway */
     protected $gateway;
@@ -49,25 +49,6 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
            'amount' => (random_int(1, 900) / 100) + 1,
            'bankAccount' => $this->checkOptions['bankAccount']
         ];
-    }
-
-    /**
-     * Test an authorize transaction followed by a capture
-     */
-    public function testAuthorizeCapture()
-    {
-        $response = $this->gateway->authorize($this->purchaseOptions)->send();
-
-        $this->assertEquals('SUCCESS', $response->getMessage());
-        $this->assertTrue($response->isSuccessful());
-
-        $captureResponse = $this->gateway->capture([
-           'amount' => '1.00',
-           'transactionReference' => $response->getTransactionReference()
-        ])->send();
-
-        $this->assertTrue($captureResponse->isSuccessful());
-        $this->assertEquals('SUCCESS', $captureResponse->getMessage());
     }
 
     public function testCreateCheckSuccess()
@@ -142,13 +123,6 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
         }
         if ($includeInvoice) {
             $requestOptions['invoice'] = '123456';
-        }
-        if ($addCommission) {
-            $requestOptions['commission'] = [
-               'fromAccount' => 32248512,
-               'toAccount' => 32248513,
-               'amount' => '2.00'
-            ];
         }
         return $requestOptions;
     }
@@ -263,7 +237,7 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
         static::assertEquals($recurringData['description'], $postUpdatedPayment->description);
         static::assertEquals($recurringData['recurringReference'], $postUpdatedPayment->id);
         static::assertEquals($preUpdatedPayment->start_date, $postUpdatedPayment->start_date);
-        static::assertEquals($preUpdatedPayment->check_reference, $postUpdatedPayment->check_reference);
+        static::assertEquals($preUpdatedPayment->card_reference, $postUpdatedPayment->card_reference);
         static::assertEquals($preUpdatedPayment->gateway, $postUpdatedPayment->gateway);
         static::assertEquals($preUpdatedPayment->gateway_password, $postUpdatedPayment->gateway_password);
         static::assertEquals($preUpdatedPayment->gateway_username, $postUpdatedPayment->gateway_username);
