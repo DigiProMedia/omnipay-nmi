@@ -7,15 +7,12 @@ use Omnipay\NMI\Message\DeleteRecurringRequest;
 use Omnipay\NMI\Message\DirectPostAuthRequest;
 use Omnipay\NMI\Message\DirectPostCaptureRequest;
 use Omnipay\NMI\Message\DirectPostCardSaleRequest;
-use Omnipay\NMI\Message\DirectPostCheckSaleRequest;
 use Omnipay\NMI\Message\DirectPostCreateCardRequest;
-use Omnipay\NMI\Message\DirectPostCreateCheckRequest;
 use Omnipay\NMI\Message\DirectPostCreditRequest;
 use Omnipay\NMI\Message\DirectPostDeleteCardRequest;
 use Omnipay\NMI\Message\DirectPostRefundRequest;
 use Omnipay\NMI\Message\DirectPostUpdateCardRequest;
 use Omnipay\NMI\Message\DirectPostVoidRequest;
-use Omnipay\NMI\Message\RecurringCheckRequest;
 use Omnipay\NMI\Message\RecurringRequest;
 use Omnipay\NMI\Message\UpdateRecurringRequest;
 
@@ -314,11 +311,7 @@ class Gateway extends AbstractGateway
      */
     public function sale(array $parameters = [])
     {
-        if (isset($parameters['bankAccount'])) {
-            return $this->createRequest(DirectPostCheckSaleRequest::class, $parameters);
-        } else {
-            return $this->createRequest(DirectPostCardSaleRequest::class, $parameters);
-        }
+        return $this->createRequest(DirectPostCardSaleRequest::class, $parameters);
     }
 
     /**
@@ -390,11 +383,6 @@ class Gateway extends AbstractGateway
         return $this->createRequest(DirectPostCreateCardRequest::class, $parameters);
     }
 
-    public function createCheck(array $parameters = [])
-    {
-        return $this->createRequest(DirectPostCreateCheckRequest::class, $parameters);
-    }
-
     /**
      * @param array $parameters
      * @return \Omnipay\NMI\Message\UpdateCardRequest
@@ -415,11 +403,7 @@ class Gateway extends AbstractGateway
 
     public function createRecurring(array $params = [])
     {
-        if (isset($params['checkReference'])) {
-            return $this->createRequest(RecurringCheckRequest::class, $params);
-        } else {
-            return $this->createRequest(RecurringRequest::class, $params);
-        }
+        return $this->createRequest(RecurringRequest::class, $params);
     }
 
     public function updateRecurring(array $params = [])

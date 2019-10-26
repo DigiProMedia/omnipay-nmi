@@ -1,6 +1,8 @@
 <?php
 
-namespace Omnipay\NMI\Message;
+namespace Omnipay\NMI\Message\Check;
+
+use Omnipay\NMI\Message\DirectPostAuthRequest;
 
 /**
  * NMI Direct Post Sale Request
@@ -16,7 +18,6 @@ class DirectPostCheckSaleRequest extends DirectPostAuthRequest
         return $data;
     }
 
-    //TODO: Remove Duplicate code below
     protected function getPaymentData(): array
     {
         $this->validateBankAccount();
@@ -25,5 +26,10 @@ class DirectPostCheckSaleRequest extends DirectPostAuthRequest
            'checkaba' => $this->getBankAccount()['routingNumber'],
            'checkaccount' => $this->getBankAccount()['number']
         ];
+    }
+
+    protected function getPaymentReference()
+    {
+        return $this->getCheckReference();
     }
 }

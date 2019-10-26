@@ -3,6 +3,7 @@ namespace Omnipay\NMI\Message;
 use Guzzle\Http\Exception\BadResponseException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Omnipay\Common\Exception\InvalidRequestException;
 use RecurringPayment\Database;
 use RecurringPayment\EnvironmentalConfig;
 

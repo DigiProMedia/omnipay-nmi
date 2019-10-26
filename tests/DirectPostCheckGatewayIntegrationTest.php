@@ -30,7 +30,7 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
      */
     public function setUp()
     {
-        $this->gateway = new Gateway();
+        $this->gateway = new CheckGateway();
         $this->gateway->setUsername('demo');
         $this->gateway->setPassword('password');
 
@@ -60,9 +60,39 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
         return $response->getCheckReference();
     }
 
-    /**
-     * Test a purchase transaction followed by a refund
-     */
+    public function testUpdateCheckSuccess()
+    {
+        $createCheckReference = $this->testCreateCheckSuccess();
+        $requestData = $this->checkOptions;
+        $requestData['checkReference'] = $createCheckReference;
+        $response = $this->gateway->updateCheck($requestData)->send();
+        $this->verifyCheckSuccess($response);
+        $this->assertSame('Customer Update Successful', $response->getMessage());
+        $this->assertNotNull($response->getCheckReference());
+        $this->assertJson($response->getCheckReference());
+    }
+
+    public function testDeleteCheckSuccess()
+    {
+        $checkReference = $this->testCreateCheckSuccess();
+        $options = [
+           'checkReference' => $checkReference
+        ];
+        $response = $this->gateway->deleteCheck($options)->send();
+        $this->verifyCheckSuccess($response);
+        $this->assertSame('Customer Deleted', $response->getMessage());
+        $this->assertNull($response->getCheckReference());
+    }
+
+    private function verifyCheckSuccess($response)
+    {
+        static::assertFalse(isset($response->getData()['errors']),
+           'Errors:' . json_encode($response->getData()['errors'] ?? ''));
+        $this->assertTrue($response->isSuccessful());
+        $this->assertFalse($response->isRedirect());
+        $this->assertSame('1', $response->getCode());
+    }
+
     public function testPurchaseRefund()
     {
         $response = $this->testPurchaseSuccess();
@@ -87,7 +117,7 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
         ])->send();
 
         $this->assertTrue($voidResponse->isSuccessful());
-        $this->assertEquals('Transaction Void Successful', $voidResponse->getMessage());
+        $this->assertEquals('SUCCESS', $voidResponse->getMessage());
     }
 
     public function testCreateRecurringFailureRequiredData()

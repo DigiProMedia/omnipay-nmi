@@ -1,12 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Omnipay\NMI\Message;
+namespace Omnipay\NMI\Message\Check;
 
-use Omnipay\NMI\Gateway;
-use RecurringPayment\Payment as Payment;
-use RecurringPayment\RecurringPayment as RecurringPayment;
-use RecurringPayment\ScheduledTask as RecurringPaymentRunner;
+use Omnipay\NMI\Message\RecurringRequest;
 
 /**
  * NMI Purchase Request.

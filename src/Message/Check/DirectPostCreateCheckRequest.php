@@ -1,6 +1,8 @@
 <?php
 
-namespace Omnipay\NMI\Message;
+namespace Omnipay\NMI\Message\Check;
+
+use Omnipay\NMI\Message\AbstractRequest;
 
 /**
 * NMI Direct Post Create Card Request
