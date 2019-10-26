@@ -81,7 +81,7 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
         $response = $this->gateway->deleteCheck($options)->send();
         $this->verifyCheckSuccess($response);
         $this->assertSame('Customer Deleted', $response->getMessage());
-        $this->assertNull($response->getCheckReference());
+        $this->assertSame($checkReference, $response->getCheckReference());
     }
 
     private function verifyCheckSuccess($response)

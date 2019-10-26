@@ -209,11 +209,12 @@ class DirectPostGatewayTest extends GatewayTestCase
     {
         $this->setMockHttpResponse('DirectPostDeleteCardSuccess.txt');
 
+        $cardReference = '452894459';
         $response = $this->gateway->deleteCard(array(
-            'cardReference' => '452894459'
+            'cardReference' => $cardReference
         ))->send();
         $this->assertTrue($response->isSuccessful());
-        $this->assertSame(null, $response->getCardReference());
+        $this->assertSame($cardReference, $response->getCardReference());
         $this->assertSame('Customer Deleted', $response->getMessage());
     }
 

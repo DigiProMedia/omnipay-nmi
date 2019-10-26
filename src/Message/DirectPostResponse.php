@@ -67,6 +67,9 @@ class DirectPostResponse extends AbstractResponse
 
     public function getCardReference()
     {
+        if (isset($this->request->getParameters()['cardReference'])) {
+            return $this->request->getParameters()['cardReference'];
+        }
         if (isset($this->data['customer_vault_id'])) {
             return trim($this->data['customer_vault_id']);
         }
@@ -76,6 +79,9 @@ class DirectPostResponse extends AbstractResponse
 
     public function getCheckReference()
     {
+        if (isset($this->request->getParameters()['checkReference'])) {
+            return $this->request->getParameters()['checkReference'];
+        }
         return $this->getCardReference();
     }
 }
