@@ -10,6 +10,7 @@ use Omnipay\NMI\Message\Check\DirectPostCreateCheckRequest;
 use Omnipay\NMI\Message\Check\DirectPostUpdateCheckRequest;
 use Omnipay\NMI\Message\Check\RecurringCheckRequest;
 use Omnipay\NMI\Message\Check\DirectPostDeleteCheckRequest;
+use Omnipay\NMI\Message\Check\UpdateRecurringCheckRequest;
 
 /**
  * NMI Direct Post Gateway
@@ -45,6 +46,11 @@ class CheckGateway extends Gateway
     public function createRecurring(array $params = [])
     {
         return $this->createRequest(RecurringCheckRequest::class, $params);
+    }
+
+    public function updateRecurring(array $params = [])
+    {
+        return $this->createRequest(UpdateRecurringCheckRequest::class, $params);
     }
 
     public function sale(array $parameters = [])

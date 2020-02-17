@@ -369,6 +369,11 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
         $this->assertFalse($response->isRedirect());
         $this->assertNotNull($response->getRecurringReference());
         $this->assertGreaterThan(0, $response->getRecurringReference());
+        if($response->getMessage() !== 'Recurring payment deleted successfully.'){
+            $recurringPayments = new RecurringPayment();
+            $recurringInfo = $recurringPayments->getPayment($response->getRecurringReference());
+            self::assertEquals('NMI_Check', $recurringInfo->gateway);
+        }
     }
 
     private function createRecurringCall(bool $useMerchantProfileId = false, bool $includeInvoice = false)

@@ -49,9 +49,9 @@ class RecurringResponse extends DirectPostResponse implements ResponseInterface
     private function getDefaultMessage()
     {
         $verb = 'setup';
-        if (strpos(get_class($this->request), 'DeleteRecurringRequest') !== false) {
+        if (strpos(get_class($this->request), 'DeleteRecurring') !== false) {
             $verb = 'deleted';
-        } elseif (strpos(get_class($this->request), 'UpdateRecurringRequest') !== false) {
+        } elseif (strpos(get_class($this->request), 'UpdateRecurring') !== false) {
             $verb = 'updated';
         }
 
