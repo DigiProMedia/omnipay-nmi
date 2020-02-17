@@ -19,4 +19,9 @@ class RecurringCheckRequest extends RecurringRequest
     {
         return $this->getCheckReference();
     }
+
+    protected function getGatewayName()
+    {
+        return 'NMI_Check';
+    }
 }
