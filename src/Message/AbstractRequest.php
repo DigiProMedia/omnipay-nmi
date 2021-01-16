@@ -12,7 +12,26 @@ use RecurringPayment\EnvironmentalConfig;
 */
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
+    protected $responseClass = DirectPostResponse::class;
     protected $endpoint = 'https://secure.nmi.com/api/transact.php';
+
+    public function sendData($data)
+    {
+        try {
+            $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $data)->send();
+        } catch (BadResponseException $e) {
+            $response = $e->getResponse();
+        } finally {
+            $responseClass = $this->responseClass;
+            $this->response = new $responseClass($this, $this->getResponseBody($httpResponse));
+            $this->logAPICall('POST', $this->getEndpoint(), null, $data, $httpResponse, $this->response);
+            return $this->response;
+        }
+    }
+
+    protected function getResponseBody($httpResponse) {
+        return $httpResponse->getBody();
+    }
 
     public function getUsername()
     {
@@ -358,19 +377,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function setCheckReference($value)
     {
         return $this->setParameter('checkReference', $value);
-    }
-
-    public function sendData($data)
-    {
-        try {
-            $httpResponse = $this->httpClient->post($this->getEndpoint(), null, $data)->send();
-        } catch (BadResponseException $e) {
-            $response = $e->getResponse();
-        } finally {
-            $this->response = new DirectPostResponse($this, $httpResponse->getBody());
-            $this->logAPICall('POST', $this->getEndpoint(), null, $data, $httpResponse, $this->response);
-            return $this->response;
-        }
     }
 
     public function setEndpoint($value)

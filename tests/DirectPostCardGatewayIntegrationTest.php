@@ -390,4 +390,43 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $this->assertEquals('SUCCESS', $response->getMessage());
         return $response;
     }
+
+    public function testTransaction()
+    {
+        $this->gateway->setUsername("THEREFapi2020");
+        $this->gateway->setPassword("2020apiTHEREF");
+
+        $requestData = [
+           'transactionReference' => '5907245136'
+        ];
+
+        $response = $this->gateway->transaction($requestData)->send();
+        $this->assertTrue($response->isSuccessful());
+        $this->assertNotEmpty($response->getMessage());
+        $this->assertEquals(100, $response->getCode());
+        $this->assertGreaterThan(40, $response->getData());
+        $this->assertArrayHasKey('action', $response->getData());
+        $this->assertTrue(is_array($response->getData()));
+        $this->assertTrue(is_array($response->getData()['action']));
+    }
+
+    /*public function testSwipeSuccess()
+    {
+        $options = [
+           'amount' => '4.00',
+           'swipe' => '%B4012881888818888^Demo/Customer^2412101001020001000000701000000?;4012881888818888=24121010010270100001?'
+        ];
+        $response = $this->gateway->swipe($options)->send();
+        $this->verifyPurchaseResult($response);
+    }*/
+
+    /*public function testEncryptedSwipeSuccess()
+    {
+        $options = [
+           'amount' => '4.00',
+           'swipe' => 'nELVjn9xI5m/CDSThOgMSvaXuBjCg+J4fuTLbQRlVXtwRd4toMgcdHEv9SFUCXw/BmTRbN/Vb431eoW6JawR983M2TbpjEd7qgmE87Y6C2A/sjoQWfU6WQGXJI08TRZXxFtds6ksYqRckthKT89Ym8q6AuXX4UR1CH/jsA20TKGpEolA/XHfXMS72nNLMcNti0+m5W6oPik50m7qSZJl0xFxXNsgN8mrKzMGhkQHsnPGSKjN30jkAa2ne8rYfQuoZQ/M9FEZzQWUX7JlKcrlWufO54jtuSC+DeGR+6pCzUqXctaGeKhIC12BfGVGNcRQMtHVZadGqXyR708fjeJdqg=='
+        ];
+        $response = $this->gateway->encryptedSwipe($options)->send();
+        $this->verifyPurchaseResult($response);
+    }*/
 }
