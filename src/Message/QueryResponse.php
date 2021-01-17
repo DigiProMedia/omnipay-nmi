@@ -119,7 +119,7 @@ class QueryResponse extends AbstractResponse
 
     public function getState()
     {
-        return $this->data['condition'];
+        return $this->data['condition'] ?? null;
     }
 
 }
