@@ -122,4 +122,24 @@ class QueryResponse extends AbstractResponse
         return $this->data['condition'] ?? null;
     }
 
+    public function getSettlementDate()
+    {
+        foreach ($this->actions as $action){
+            if($action['action_type'] === 'settle') {
+                return date_create($action['date'], timezone_open('UTC'))->format(DATE_ATOM);
+            }
+        }
+        return null;
+    }
+
+    public function getBatchNumber()
+    {
+        foreach ($this->actions as $action){
+            if($action['action_type'] === 'settle') {
+                return $action['batch_id'];
+            }
+        }
+        return null;
+    }
+
 }

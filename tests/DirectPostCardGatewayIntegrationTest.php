@@ -417,6 +417,8 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $this->assertFalse($response->isRefunded());
         $this->assertFalse($response->isVoided());
         $this->assertEquals('complete', $response->getState());
+        $this->assertEquals('460577892', $response->getBatchNumber());
+        $this->assertEquals('2021-01-04T23:07:16+00:00', $response->getSettlementDate());
     }
 
     /*public function testSwipeSuccess()
