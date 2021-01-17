@@ -408,6 +408,15 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $this->assertArrayHasKey('action', $response->getData());
         $this->assertTrue(is_array($response->getData()));
         $this->assertTrue(is_array($response->getData()['action']));
+        $this->assertNull($response->getCardReference());
+        $this->assertEquals('5907245136', $response->getTransactionReference());
+        $this->assertEquals('230.00', $response->getAmount());
+        $this->assertFalse($response->canRefund());
+        $this->assertFalse($response->isPending());
+        $this->assertTrue($response->canVoid());
+        $this->assertFalse($response->isRefunded());
+        $this->assertFalse($response->isVoided());
+        $this->assertEquals('complete', $response->getState());
     }
 
     /*public function testSwipeSuccess()
