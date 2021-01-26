@@ -135,16 +135,6 @@ class RecurringRequest extends AbstractRequest
         return $this->getParameter('email');
     }
 
-    public function getInvoice()
-    {
-        return $this->getParameter('invoice');
-    }
-
-    public function setInvoice($value)
-    {
-        return $this->setParameter('invoice', $value);
-    }
-
     public function getCommission()
     {
         return $this->getParameter('commission');

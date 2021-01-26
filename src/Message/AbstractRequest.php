@@ -1,5 +1,7 @@
 <?php
+
 namespace Omnipay\NMI\Message;
+
 use Guzzle\Http\Exception\BadResponseException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -8,8 +10,8 @@ use RecurringPayment\Database;
 use RecurringPayment\EnvironmentalConfig;
 
 /**
-* NMI Abstract Request
-*/
+ * NMI Abstract Request
+ */
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
     protected $responseClass = DirectPostResponse::class;
@@ -29,8 +31,19 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         }
     }
 
-    protected function getResponseBody($httpResponse) {
+    protected function getResponseBody($httpResponse)
+    {
         return $httpResponse->getBody();
+    }
+
+    public function getInvoice()
+    {
+        return $this->getParameter('invoice');
+    }
+
+    public function setInvoice($value)
+    {
+        return $this->setParameter('invoice', $value);
     }
 
     public function getUsername()
@@ -235,7 +248,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     protected function getBaseData()
     {
-        $data = array();
+        $data = [];
 
         if (isset($this->type)) {
             $data['type'] = $this->type;
@@ -301,10 +314,10 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     protected function getOrderData()
     {
-        $data = array();
+        $data = [];
 
-        $data['orderid'] = $this->getOrderId();
-        $data['orderdescription'] = $this->getOrderDescription();
+        $data['orderid'] = $this->getInvoice();
+        $data['orderdescription'] = $this->getDescription();
         $data['tax'] = $this->getTax();
         $data['shipping'] = $this->getShipping();
         $data['ponumber'] = $this->getPONumber();
@@ -318,7 +331,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     protected function getBillingData()
     {
-        $data = array();
+        $data = [];
 
         if ($card = $this->getCard()) {
             $data['firstname'] = $card->getBillingFirstName();
@@ -341,7 +354,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 
     protected function getShippingData()
     {
-        $data = array();
+        $data = [];
 
         if ($card = $this->getCard()) {
             $data['shipping_firstname'] = $card->getShippingFirstName();
