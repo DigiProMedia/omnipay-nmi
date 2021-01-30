@@ -57,6 +57,23 @@ class QueryResponse extends AbstractResponse
         return null;
     }
 
+    public function getTransactionType()
+    {
+        //AUTHORIZATION, STR/FWD, REFUND, CAPTURE, FORCE,
+        if ($this->isVoided()) {
+            return 'VOID';
+        } else if ($this->isRefunded()) {
+            return 'REFUND';
+        } else if ($this->isPending()) {
+            return 'PENDING';
+        } else if ($this->isSettled()) {
+            return 'SETTLED';
+        } else if ($this->isDeclined()) {
+            return 'DECLINED';
+        }
+    }
+
+
     public function getTransactionReference()
     {
         if (isset($this->data['transaction_id'])) {
@@ -84,7 +101,7 @@ class QueryResponse extends AbstractResponse
     public function isPending()
     {
         return $this->getState() === 'pending' ||
-           $this->getState() === 'pendingsettlement';
+            $this->getState() === 'pendingsettlement';
     }
 
     public function canVoid()
@@ -124,8 +141,8 @@ class QueryResponse extends AbstractResponse
 
     public function getSettlementDate()
     {
-        foreach ($this->actions as $action){
-            if($action['action_type'] === 'settle') {
+        foreach ($this->actions as $action) {
+            if ($action['action_type'] === 'settle') {
                 return date_create($action['date'], timezone_open('UTC'))->format(DATE_ATOM);
             }
         }
@@ -134,12 +151,22 @@ class QueryResponse extends AbstractResponse
 
     public function getBatchNumber()
     {
-        foreach ($this->actions as $action){
-            if($action['action_type'] === 'settle') {
+        foreach ($this->actions as $action) {
+            if ($action['action_type'] === 'settle') {
                 return $action['batch_id'];
             }
         }
         return null;
+    }
+
+    public function isSettled()
+    {
+        return $this->getState() === 'complete';
+    }
+
+    public function isDeclined()
+    {
+        return $this->getState() === 'failed';
     }
 
 }
