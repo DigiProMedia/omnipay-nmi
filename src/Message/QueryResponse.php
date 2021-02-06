@@ -152,7 +152,7 @@ class QueryResponse extends AbstractResponse
     public function getBatchNumber()
     {
         foreach ($this->actions as $action) {
-            if ($action['action_type'] === 'settle') {
+            if (array_key_exists('action_type', $action) && $action['action_type'] === 'settle') {
                 return $action['batch_id'];
             }
         }
