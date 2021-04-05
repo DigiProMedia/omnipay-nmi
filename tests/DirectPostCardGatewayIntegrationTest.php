@@ -32,8 +32,9 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $this->gateway->setPassword('password');
 
         $this->purchaseOptions = [
-           'amount' => (random_int(1, 900) / 100) + 1,
-           'card' => $this->getValidCard()
+            'amount' => (random_int(1, 900) / 100) + 1,
+            'card' => $this->getValidCard(),
+            'description' => 'My Description'
         ];
     }
 
@@ -48,8 +49,8 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $this->assertTrue($response->isSuccessful());
 
         $captureResponse = $this->gateway->capture([
-           'amount' => '1.00',
-           'transactionReference' => $response->getTransactionReference()
+            'amount' => '1.00',
+            'transactionReference' => $response->getTransactionReference()
         ])->send();
 
         $this->assertTrue($captureResponse->isSuccessful());
@@ -73,7 +74,7 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $response = $this->testPurchaseSuccess();
 
         $refundResponse = $this->gateway->refund([
-           'transactionReference' => $response->getTransactionReference()
+            'transactionReference' => $response->getTransactionReference()
         ])->send();
 
         $this->assertTrue($refundResponse->isSuccessful());
@@ -88,7 +89,7 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $response = $this->testPurchaseSuccess();
 
         $voidResponse = $this->gateway->void([
-           'transactionReference' => $response->getTransactionReference()
+            'transactionReference' => $response->getTransactionReference()
         ])->send();
 
         $this->assertTrue($voidResponse->isSuccessful());
@@ -108,20 +109,21 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
     }
 
     private function getValidRecurringData(
-       bool $addCommission = false,
-       bool $useMerchantProfileId = false,
-       bool $includeInvoice = false
-    ) {
+        bool $addCommission = false,
+        bool $useMerchantProfileId = false,
+        bool $includeInvoice = false
+    )
+    {
         $requestOptions = [
-           'startDate' => date('Y-m-d'),
-           'amount' => '10.00',
-           'totalCount' => '3',
-           'frequency' => 'Yearly',
-           'description' => 'unittest',
-           'cardReference' => $this->testCreateCardSuccess(),
-           'locationID' => 13579,
-           'subDomain' => 'http://www.test.com',
-           'email' => 'test@testDigiProMedia.com'
+            'startDate' => date('Y-m-d'),
+            'amount' => '10.00',
+            'totalCount' => '3',
+            'frequency' => 'Yearly',
+            'description' => 'unittest',
+            'cardReference' => $this->testCreateCardSuccess(),
+            'locationID' => 13579,
+            'subDomain' => 'http://www.test.com',
+            'email' => 'test@testDigiProMedia.com'
         ];
         if ($useMerchantProfileId) {
             $requestOptions['merchantProfileId'] = '2195895';
@@ -131,9 +133,9 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         }
         if ($addCommission) {
             $requestOptions['commission'] = [
-               'fromAccount' => 32248512,
-               'toAccount' => 32248513,
-               'amount' => '2.00'
+                'fromAccount' => 32248512,
+                'toAccount' => 32248513,
+                'amount' => '2.00'
             ];
         }
         return $requestOptions;
@@ -206,15 +208,15 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
     public function testCreateRecurringPaymentFailedBadCardRef()
     {
         $data = [
-           'startDate' => date('Y-m-d'),
-           'amount' => '10.00',
-           'totalCount' => '3',
-           'frequency' => 'Yearly',
-           'description' => 'unittest',
-           'cardReference' => 'fakefakefake',
-           'locationID' => 13579,
-           'subDomain' => 'http://www.test.com',
-           'email' => 'test@testDigiProMedia.com'
+            'startDate' => date('Y-m-d'),
+            'amount' => '10.00',
+            'totalCount' => '3',
+            'frequency' => 'Yearly',
+            'description' => 'unittest',
+            'cardReference' => 'fakefakefake',
+            'locationID' => 13579,
+            'subDomain' => 'http://www.test.com',
+            'email' => 'test@testDigiProMedia.com'
         ];
         $response = $this->gateway->createRecurring($data)->send();
         static::assertStringStartsWith('Invalid Customer Vault ID specified REFID:', $response->getMessage());
@@ -227,9 +229,9 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
     public function testUpdateRecurringPartialData()
     {
         $recurringData = [
-           'recurringReference' => $this->testCreateRecurring(),
-           'totalCount' => 5,
-           'description' => 'unittest updated!'
+            'recurringReference' => $this->testCreateRecurring(),
+            'totalCount' => 5,
+            'description' => 'unittest updated!'
         ];
         $recurringPayments = new RecurringPayment();
         $preUpdatedPayment = $recurringPayments->getPayment($recurringData['recurringReference']);
@@ -261,12 +263,12 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
     {
         $recurringReference = $this->testCreateRecurring();
         $recurringData = [
-           'recurringReference' => $recurringReference,
-           'totalCount' => 5,
-           'frequency' => 'Monthly',
-           'description' => 'unittest updated!',
-           'nextDate' => date('Y-m-d'),
-           'start_date' => '2019-01-01'
+            'recurringReference' => $recurringReference,
+            'totalCount' => 5,
+            'frequency' => 'Monthly',
+            'description' => 'unittest updated!',
+            'nextDate' => date('Y-m-d'),
+            'start_date' => '2019-01-01'
         ];
         $recurringPayments = new RecurringPayment();
         $preUpdatedPayment = $recurringPayments->getPayment($recurringReference);
@@ -315,12 +317,12 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
     public function testUpdateRecurringBadRecurringReference()
     {
         $recurringData = [
-           'recurringReference' => 'abc213',
-           'totalCount' => 5,
-           'frequency' => 'Monthly',
-           'description' => 'unittest updated!',
-           'nextDate' => date('Y-m-d'),
-           'start_date' => '2019-01-01'
+            'recurringReference' => 'abc213',
+            'totalCount' => 5,
+            'frequency' => 'Monthly',
+            'description' => 'unittest updated!',
+            'nextDate' => date('Y-m-d'),
+            'start_date' => '2019-01-01'
         ];
 
         $response = $this->gateway->UpdateRecurring($recurringData)->send();
@@ -333,12 +335,12 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
     private function getRecurringOptions($cardReference, $frequency = '1')
     {
         $requestParams = [
-           'startDate' => '12/12/2019',
-           'amount' => '10.00',
-           'totalCount' => '3',
-           'description' => 'Test Description',
-           'frequency' => $frequency,
-           'cardReference' => $cardReference
+            'startDate' => '12/12/2019',
+            'amount' => '10.00',
+            'totalCount' => '3',
+            'description' => 'Test Description',
+            'frequency' => $frequency,
+            'cardReference' => $cardReference
         ];
         return $requestParams;
     }
@@ -346,7 +348,7 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
     private function verifyRecurringResponse($response)
     {
         static::assertFalse(isset($response->getData()['errors']),
-           'Errors:' . json_encode($response->getData()['errors'] ?? ''));
+            'Errors:' . json_encode($response->getData()['errors'] ?? ''));
         $this->assertTrue($response->isSuccessful());
         $this->assertFalse($response->isRedirect());
         $this->assertNotNull($response->getRecurringReference());
@@ -356,7 +358,7 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
     private function createRecurringCall(bool $useMerchantProfileId = false, bool $includeInvoice = false)
     {
         $response = $this->gateway->createRecurring($this->getValidRecurringData(false, $useMerchantProfileId,
-           $includeInvoice))->send();
+            $includeInvoice))->send();
         static::assertSame('Recurring payment setup and charged successfully.', $response->getMessage());
         static::assertEquals('1', $response->getCode());
         static::assertTrue($response->isSuccessful());
@@ -369,6 +371,9 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
 
     public function testPurchaseSuccess()
     {
+//        $this->gateway->setUsername("THEREFapi2020");
+//        $this->gateway->setPassword("2020apiTHEREF");
+//        $this->gateway->setTestMode(true);
         $response = $this->gateway->purchase($this->purchaseOptions)->send();
 
         $this->assertTrue($response->isSuccessful());
@@ -380,8 +385,9 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
     {
         $cardReference = $this->testCreateCardSuccess();
         $requestData = [
-           'cardReference' => $cardReference,
-           'amount' => '1.00',
+            'cardReference' => $cardReference,
+            'amount' => '1.00',
+            'description' => 'Test description'
         ];
 
         $response = $this->gateway->purchase($requestData)->send();
@@ -397,11 +403,12 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $this->gateway->setPassword("2020apiTHEREF");
 
         $requestData = [
-           'transactionReference' => '5907245136'
+           'transactionReference' => '5593854806'
         ];
 
         $response = $this->gateway->transaction($requestData)->send();
         $this->assertTrue($response->isSuccessful());
+        $this->assertEquals('SETTLED', $response->getTransactionType());
         $this->assertNotEmpty($response->getMessage());
         $this->assertEquals(100, $response->getCode());
         $this->assertGreaterThan(40, $response->getData());
@@ -409,16 +416,54 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $this->assertTrue(is_array($response->getData()));
         $this->assertTrue(is_array($response->getData()['action']));
         $this->assertNull($response->getCardReference());
-        $this->assertEquals('5907245136', $response->getTransactionReference());
-        $this->assertEquals('230.00', $response->getAmount());
+        $this->assertEquals($requestData['transactionReference'], $response->getTransactionReference());
+        $this->assertEquals('1.00', $response->getAmount());
         $this->assertFalse($response->canRefund());
         $this->assertFalse($response->isPending());
         $this->assertTrue($response->canVoid());
         $this->assertFalse($response->isRefunded());
         $this->assertFalse($response->isVoided());
         $this->assertEquals('complete', $response->getState());
-        $this->assertEquals('460577892', $response->getBatchNumber());
-        $this->assertEquals('2021-01-04T23:07:16+00:00', $response->getSettlementDate());
+        $this->assertEquals('439648313', $response->getBatchNumber());
+        $this->assertEquals('2020-08-24T22:11:33+00:00', $response->getSettlementDate());
+    }
+
+    public function testTransactions()
+    {
+        $this->gateway->setUsername("THEREFapi2020");
+        $this->gateway->setPassword("2020apiTHEREF");
+
+        $requestData = [
+           'startDate' => '3-12-2021'
+        ];
+
+        $response = $this->gateway->transactions($requestData)->send();
+        $this->assertTrue($response->isSuccessful());
+        foreach ($response->getData() as $transaction) {
+            $this->assertTrue(is_string($transaction->getTransactionType()));
+            $this->assertNotEmpty($transaction->getMessage());
+            $this->assertGreaterThan(1, $transaction->getCode());
+            $this->assertGreaterThan(40, $transaction->getData());
+            $this->assertArrayHasKey('action', $transaction->getData());
+            $this->assertTrue(is_array($transaction->getData()));
+            $this->assertTrue(is_array($transaction->getData()['action']));
+            $this->assertNull($transaction->getCardReference());
+            $this->assertNotNull($transaction->getTransactionReference());
+            $this->assertGreaterThan('0.00', $transaction->getAmount());
+            $this->assertNotNull($transaction->canRefund());
+            $this->assertNotNull($transaction->isPending());
+            $this->assertNotNull($transaction->canVoid());
+            $this->assertNotNull($transaction->isRefunded());
+            $this->assertNotNull($transaction->isVoided());
+            $this->assertTrue(is_string($transaction->getState()));
+            if($transaction->getTransactionType() === 'SETTLED') {
+                $this->assertNotNull($transaction->getBatchNumber());
+                $this->assertTrue(is_string($transaction->getSettlementDate()));
+            } else {
+                $this->assertNull($transaction->getSettlementDate());
+                $this->assertNull($transaction->getBatchNumber());
+            }
+        }
     }
 
     /*public function testSwipeSuccess()

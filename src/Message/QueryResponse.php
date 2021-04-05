@@ -13,8 +13,17 @@ class QueryResponse extends AbstractResponse
     public function __construct(RequestInterface $request, $data)
     {
         $this->request = $request;
-        $this->data = json_decode(json_encode($data), true)['transaction'] ?? [];
-        $this->actions = $this->data['action'] ?? [];
+        $responseData = json_decode(json_encode($data), true);
+        if (array_key_exists('transaction', $responseData)) {
+            $this->data = $responseData['transaction'] ?? [];
+        } else {
+            $this->data = $responseData ?? [];
+        }
+        if(array_key_exists(0, $this->data['action'])){
+            $this->actions = $this->data['action'] ?? [];
+        } else {
+            $this->actions[] = $this->data['action'] ?? [];
+        }
     }
 
     public function isSuccessful()
@@ -34,7 +43,7 @@ class QueryResponse extends AbstractResponse
 
     public function getMessage()
     {
-        return end($this->actions)['response_text'];
+        return end($this->actions)['response_text'] ?? '';
     }
 
     public function getAuthorizationCode()
@@ -158,6 +167,7 @@ class QueryResponse extends AbstractResponse
         }
         return null;
     }
+
 
     public function isSettled()
     {

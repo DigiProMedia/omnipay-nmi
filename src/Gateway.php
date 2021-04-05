@@ -15,6 +15,7 @@ use Omnipay\NMI\Message\DirectPostUpdateCardRequest;
 use Omnipay\NMI\Message\DirectPostVoidRequest;
 use Omnipay\NMI\Message\RecurringRequest;
 use Omnipay\NMI\Message\Transaction;
+use Omnipay\NMI\Message\Transactions;
 use Omnipay\NMI\Message\UpdateRecurringRequest;
 
 /**
@@ -420,5 +421,10 @@ class Gateway extends AbstractGateway
     public function transaction(array $params = [])
     {
         return $this->createRequest(Transaction::class, $params);
+    }
+
+    public function transactions(array $params = [])
+    {
+        return $this->createRequest(Transactions::class, $params);
     }
 }

@@ -9,9 +9,6 @@ class Transaction extends AbstractRequest
     protected $responseClass = QueryResponse::class;
     protected $endpoint = 'https://secure.networkmerchants.com/api/query.php';
 
-    /**
-     * @inheritDoc
-     */
     public function getData()
     {
         return [
