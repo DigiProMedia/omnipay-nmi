@@ -19,7 +19,9 @@ class QueryResponse extends AbstractResponse
         } else {
             $this->data = $responseData ?? [];
         }
-        if(array_key_exists(0, $this->data['action'])){
+        if(!array_key_exists('action', $this->data)) {
+            $this->actions = [];
+        } elseif(array_key_exists(0, $this->data['action'])){
             $this->actions = $this->data['action'] ?? [];
         } else {
             $this->actions[] = $this->data['action'] ?? [];
@@ -155,6 +157,7 @@ class QueryResponse extends AbstractResponse
                 return date_create($action['date'], timezone_open('UTC'))->format(DATE_ATOM);
             }
         }
+
         return null;
     }
 
