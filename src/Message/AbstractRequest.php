@@ -482,6 +482,9 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
         if (isset($currentData['password'])) {
             $scrubbedData['password'] = $this->maskNumberWithAsterisks($currentData['password']);
         }
+        if (isset($currentData['ccnumber'])) {
+            $scrubbedData['ccnumber'] = $this->maskNumberWithAsterisks($currentData['ccnumber']);
+        }
         return $scrubbedData;
     }
 
