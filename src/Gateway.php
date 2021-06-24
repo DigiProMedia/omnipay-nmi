@@ -427,4 +427,9 @@ class Gateway extends AbstractGateway
     {
         return $this->createRequest(Transactions::class, $params);
     }
+
+    public function batchTransactions(array $params = [])
+    {
+        return $this->createRequest(Transactions::class, $params);
+    }
 }
