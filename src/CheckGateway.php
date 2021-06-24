@@ -11,6 +11,7 @@ use Omnipay\NMI\Message\Check\DirectPostUpdateCheckRequest;
 use Omnipay\NMI\Message\Check\RecurringCheckRequest;
 use Omnipay\NMI\Message\Check\DirectPostDeleteCheckRequest;
 use Omnipay\NMI\Message\Check\UpdateRecurringCheckRequest;
+use Omnipay\NMI\Message\Transactions;
 
 /**
  * NMI Direct Post Gateway
