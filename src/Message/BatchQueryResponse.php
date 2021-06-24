@@ -37,4 +37,8 @@ class BatchQueryResponse extends AbstractResponse
         return null;
     }
 
+    public function getTransactions() {
+        return $this->data;
+    }
+
 }
