@@ -434,12 +434,15 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $this->gateway->setPassword("2020apiTHEREF");
 
         $requestData = [
-           'startDate' => '3-12-2021'
+           'startDate' => '2021-05-08',
+           'endDate' => '2021-05-09',
+
         ];
 
         $response = $this->gateway->transactions($requestData)->send();
         $this->assertTrue($response->isSuccessful());
-        foreach ($response->getData() as $transaction) {
+        self::assertCount(8, $response->getTransactions());
+        foreach ($response->getTransactions() as $transaction) {
             $this->assertTrue(is_string($transaction->getTransactionType()));
             $this->assertNotEmpty($transaction->getMessage());
             $this->assertGreaterThan(1, $transaction->getCode());
