@@ -57,6 +57,7 @@ class Transactions extends AbstractRequest
         return $this->setParameter('endDate', $value);
     }
 
+
     private function verifyAndFixDate($date)
     {
         if ($this->validateDate($date, 'm-d-Y') || $this->validateDate($date, 'n-j-Y')) {
