@@ -37,8 +37,44 @@ class BatchQueryResponse extends AbstractResponse
         return null;
     }
 
-    public function getTransactions() {
-        return $this->data;
+    public function getTransactions()
+    {
+        $formattedData = [];
+        foreach ($this->getData() as $transaction) {
+            $formattedTransaction = $transaction->data;
+            $formattedTransaction['transactionType'] = $transaction->getTransactionType();
+            $formattedTransaction['isSuccessful'] = $transaction->isSuccessful();
+            $formattedTransaction['code'] = $transaction->getCode();
+            $formattedTransaction['responseCode'] = $transaction->getResponseCode();
+            $formattedTransaction['message'] = $transaction->getMessage();
+            $formattedTransaction['authorizationCode'] = $transaction->getAuthorizationCode();
+            $formattedTransaction['avsResponse'] = $transaction->getAVSResponse();
+            $formattedTransaction['cvvResponse'] = $transaction->getCVVResponse();
+            $formattedTransaction['orderId'] = $transaction->getOrderId();
+            $formattedTransaction['transactionType'] = $transaction->getTransactionType();
+            $formattedTransaction['transactionReference'] = $transaction->getTransactionReference();
+            $formattedTransaction['cardReference'] = $transaction->getCardReference();
+            $formattedTransaction['checkReference'] = $transaction->getCheckReference();
+            $formattedTransaction['amount'] = $transaction->getAmount();
+            $formattedTransaction['isPending'] = $transaction->isPending();
+            $formattedTransaction['canVoid'] = $transaction->canVoid();
+            $formattedTransaction['isVoidable'] = $transaction->isVoidable();
+            $formattedTransaction['isVoided'] = $transaction->isVoided();
+            $formattedTransaction['isRefunded'] = $transaction->isRefunded();
+            $formattedTransaction['isRefundable'] = $transaction->isRefundable();
+            $formattedTransaction['canRefund'] = $transaction->canRefund();
+            $formattedTransaction['state'] = $transaction->getState();
+            $formattedTransaction['settlementDate'] = $transaction->getSettlementDate();
+            $formattedTransaction['batchNumber'] = $transaction->getBatchNumber();
+            $formattedTransaction['isSettled'] = $transaction->isSettled();
+            $formattedTransaction['isDeclined'] = $transaction->isDeclined();
+            $formattedTransaction['isCancelled'] = $transaction->isCancelled();
+            $formattedTransaction['data'] = $transaction->getData();
+            $formattedTransaction['transactionId'] = $transaction->getTransactionId();
+            //$formattedTransaction['actions'] = $transaction->actions;
+            $formattedData[] = $formattedTransaction;
+        }
+        return $formattedData;
     }
 
 }

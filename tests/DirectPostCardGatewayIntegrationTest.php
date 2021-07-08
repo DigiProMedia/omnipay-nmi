@@ -443,28 +443,28 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $this->assertTrue($response->isSuccessful());
         self::assertCount(8, $response->getTransactions());
         foreach ($response->getTransactions() as $transaction) {
-            $this->assertTrue(is_string($transaction->getTransactionType()));
-            $this->assertNotEmpty($transaction->getMessage());
-            $this->assertGreaterThan(1, $transaction->getCode());
-            $this->assertGreaterThan(40, $transaction->getData());
-            $this->assertArrayHasKey('action', $transaction->getData());
-            $this->assertTrue(is_array($transaction->getData()));
-            $this->assertTrue(is_array($transaction->getData()['action']));
-            $this->assertNull($transaction->getCardReference());
-            $this->assertNotNull($transaction->getTransactionReference());
-            $this->assertGreaterThan('0.00', $transaction->getAmount());
-            $this->assertNotNull($transaction->canRefund());
-            $this->assertNotNull($transaction->isPending());
-            $this->assertNotNull($transaction->canVoid());
-            $this->assertNotNull($transaction->isRefunded());
-            $this->assertNotNull($transaction->isVoided());
-            $this->assertTrue(is_string($transaction->getState()));
-            if($transaction->getTransactionType() === 'SETTLED') {
-                $this->assertNotNull($transaction->getBatchNumber());
-                $this->assertTrue(is_string($transaction->getSettlementDate()));
+            $this->assertTrue(is_string($transaction['transactionType']));
+            $this->assertNotEmpty($transaction['message']);
+            $this->assertGreaterThan(1, $transaction['code']);
+            $this->assertGreaterThan(40, $transaction['data']);
+            $this->assertArrayHasKey('action', $transaction['data']);
+            $this->assertTrue(is_array($transaction['data']));
+            $this->assertTrue(is_array($transaction['data']['action']));
+            $this->assertNull($transaction['cardReference']);
+            $this->assertNotNull($transaction['transactionReference']);
+            $this->assertGreaterThan('0.00', $transaction['amount']);
+            $this->assertNotNull($transaction['canRefund']);
+            $this->assertNotNull($transaction['isPending']);
+            $this->assertNotNull($transaction['canVoid']);
+            $this->assertNotNull($transaction['isRefunded']);
+            $this->assertNotNull($transaction['isVoided']);
+            $this->assertTrue(is_string($transaction['state']));
+            if($transaction['transactionType'] === 'SETTLED') {
+                $this->assertNotNull($transaction['batchNumber']);
+                $this->assertTrue(is_string($transaction['settlementDate']));
             } else {
-                $this->assertNull($transaction->getSettlementDate());
-                $this->assertNull($transaction->getBatchNumber());
+                $this->assertNull($transaction['settlementDate']);
+                $this->assertNull($transaction['batchNumber']);
             }
         }
     }
