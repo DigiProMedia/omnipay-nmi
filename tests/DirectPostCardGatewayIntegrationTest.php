@@ -458,6 +458,7 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
             $this->assertNotNull($transaction['canVoid']);
             $this->assertNotNull($transaction['isRefunded']);
             $this->assertNotNull($transaction['isVoided']);
+            $this->assertNotEmpty($transaction['transactionId']);
             $this->assertTrue(is_string($transaction['state']));
             if($transaction['transactionType'] === 'SETTLED') {
                 $this->assertNotNull($transaction['batchNumber']);

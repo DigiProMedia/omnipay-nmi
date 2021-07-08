@@ -182,4 +182,8 @@ class QueryResponse extends AbstractResponse
         return $this->getState() === 'failed';
     }
 
+    public function getTransactionId() {
+        return $this->getData()['transaction_id'];
+    }
+
 }
