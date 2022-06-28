@@ -109,7 +109,7 @@ class RecurringRequest extends AbstractRequest
     private function getURL()
     {
         if (!isset($_SERVER['SERVER_NAME'])) {
-            return 'http://localhost/';
+            return 'http://localhost:81/';
         }
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https://' : 'http://';
         $serverName = $_SERVER['SERVER_NAME'];
