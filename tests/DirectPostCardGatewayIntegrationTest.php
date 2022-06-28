@@ -397,6 +397,36 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         return $response;
     }
 
+    public function testPurchasePaymentTokenCardSuccess()
+    {
+        $requestData = [
+            'paymentToken' => '00000000-000000-000000-000000000000',
+            'amount' => '3.00',
+            'description' => 'Test description'
+        ];
+
+        $response = $this->gateway->purchase($requestData)->send();
+
+        $this->assertTrue($response->isSuccessful());
+        $this->assertEquals('SUCCESS', $response->getMessage());
+        return $response;
+    }
+
+    public function testPurchasePaymentTokenCardFailure()
+    {
+        $requestData = [
+            'paymentToken' => '000000A-000000-000000-000000000000',
+            'amount' => '1.00',
+            'description' => 'Test description'
+        ];
+
+        $response = $this->gateway->purchase($requestData)->send();
+
+        $this->assertFalse($response->isSuccessful());
+        $this->assertStringStartsWith('Payment Token does not exist', $response->getMessage());
+        return $response;
+    }
+
     public function testTransaction()
     {
         $this->gateway->setUsername("THEREFapi2020");

@@ -39,12 +39,28 @@ class DirectPostAuthRequest extends AbstractRequest
 
     protected function getPaymentData(): array
     {
+        if ($this->getPaymentToken()) {
+            return [
+                'payment_token' => $this->getPaymentToken()
+            ];
+        }
+
         $this->getCard()->validate();
 
         return [
-           'ccnumber' => $this->getCard()->getNumber(),
-           'ccexp' => $this->getCard()->getExpiryDate('my'),
-           'cvv' => $this->getCard()->getCvv(),
+            'ccnumber' => $this->getCard()->getNumber(),
+            'ccexp' => $this->getCard()->getExpiryDate('my'),
+            'cvv' => $this->getCard()->getCvv(),
         ];
+    }
+
+    public function getPaymentToken()
+    {
+        return $this->getParameter('paymentToken');
+    }
+
+    public function setPaymentToken($value)
+    {
+        return $this->setParameter('paymentToken', $value);
     }
 }
