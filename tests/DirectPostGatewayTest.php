@@ -10,7 +10,7 @@ class DirectPostGatewayTest extends GatewayTestCase
     protected $voidOptions;
     protected $refundOptions;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

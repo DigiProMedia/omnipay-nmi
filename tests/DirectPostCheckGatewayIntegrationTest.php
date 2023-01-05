@@ -28,7 +28,7 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
     /**
      * Instantiate the gateway and the populate the purchaseOptions array
      */
-    public function setUp()
+    public function setUp():void
     {
         $this->gateway = new CheckGateway();
         $this->gateway->setUsername('demo');
@@ -166,7 +166,7 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
         $recurringData['nextDate'] = 1 + (int)(new \DateTime())->format('Y') . '-1-1';
         $response = $this->gateway->updateRecurring($recurringData)->send();
         static::assertSame('Recurring payment updated successfully.', $response->getMessage());
-        static::assertEquals('00', $response->getCode());
+        static::assertEquals('0', $response->getCode());
         static::assertTrue($response->isSuccessful());
         static::assertEquals($recurringData['recurringReference'], $response->getRecurringReference());
         $this->verifyRecurringResponse($response);
@@ -198,7 +198,7 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
         $options['startDate'] = $tomorrow->format('Y-m-d');
         $response = $this->gateway->createRecurring($options)->send();
         static::assertSame('Recurring payment setup successfully.', $response->getMessage());
-        static::assertEquals('00', $response->getCode());
+        static::assertEquals('0', $response->getCode());
         static::assertTrue($response->isSuccessful());
         static::assertFalse($response->charged());
         static::assertGreaterThan(0, $response->getRecurringReference());
@@ -253,7 +253,7 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
         $preUpdatedPayment = $recurringPayments->getPayment($recurringData['recurringReference']);
         $response = $this->gateway->UpdateRecurring($recurringData)->send();
         static::assertSame('Recurring payment updated successfully.', $response->getMessage());
-        static::assertEquals('00', $response->getCode());
+        static::assertEquals('0', $response->getCode());
         $postUpdatedPayment = $recurringPayments->getPayment($recurringData['recurringReference']);
         $this->verifyRecurringData($recurringData, $postUpdatedPayment, $preUpdatedPayment);
         static::assertEquals(1, $postUpdatedPayment->success_count);
@@ -343,7 +343,7 @@ class DirectPostCheckGatewayIntegrationTest extends GatewayTestCase
 
         $response = $this->gateway->UpdateRecurring($recurringData)->send();
         static::assertSame('Invalid recurringReference.', $response->getMessage());
-        static::assertEquals('00', $response->getCode());
+        static::assertEquals('0', $response->getCode());
         static::assertEmpty($response->getTransactionReference());
         static::assertFalse($response->isSuccessful());
     }

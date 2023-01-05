@@ -25,7 +25,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/DigiProMedia/omnipay-tests.git"
+            "url": "https://github.com/Jason-A-Hansen/omnipay-tests.git"
         },
         {
             "type": "vcs",
@@ -42,7 +42,7 @@
         "monolog/monolog": "^1.23"
     },
     "require-dev": {
-        "omnipay/tests": "~2.0"
+        "richtor/omnipay-tests": "dev-master"
     },
     "extra": {
         "branch-alias": {
