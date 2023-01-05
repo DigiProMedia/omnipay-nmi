@@ -25,7 +25,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/Richtor/omnipay-tests.git"
+            "url": "https://github.com/DigiProMedia/omnipay-tests.git"
         },
         {
             "type": "vcs",
