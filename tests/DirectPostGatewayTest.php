@@ -14,7 +14,7 @@ class DirectPostGatewayTest extends GatewayTestCase
     {
         parent::setUp();
 
-        $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
+        $this->gateway = new Gateway();
 
         $this->purchaseOptions = array(
             'amount' => '10.00',
