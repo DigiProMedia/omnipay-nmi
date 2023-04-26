@@ -2,12 +2,18 @@
 
 **NMI (Network Merchants Inc.) driver for the Omnipay PHP payment processing library**
 
-[![Build Status](https://travis-ci.org/mfauveau/omnipay-nmi.png?branch=master)](https://travis-ci.org/mfauveau/omnipay-nmi)
-[![Latest Stable Version](https://poser.pugx.org/mfauveau/omnipay-nmi/version.png)](https://packagist.org/packages/mfauveau/omnipay-nmi)
-[![Total Downloads](https://poser.pugx.org/mfauveau/omnipay-nmi/d/total.png)](https://packagist.org/packages/mfauveau/omnipay-nmi)
 
 [Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
 processing library for PHP 5.3+. This package implements [NMI](https://www.nmi.com/) (Network Merchants Inc.) support for Omnipay.
+
+
+## Payment-API Tips
+This library _**does not**_ use recurring payments like the other gateways.
+Tests are in the tests folder.
+
+Message folder contains all the code for requests and responses to Paytrace.  These are accessed through the `*Gateway.php` classes.
+
+You'll need Payment-API checked out in the same parent folder to this repo.  That payment-api will need a valid  `.env` file, or you'll have failures whenever it tries to write the DB.
 
 ## Installation
 
