@@ -33,7 +33,7 @@ class Transactions extends AbstractRequest
     }
 
     protected function getResponseBody($httpResponse) {
-        return $httpResponse->xml();
+        return simplexml_load_string($httpResponse->getBody()->getContents());
     }
 
 
