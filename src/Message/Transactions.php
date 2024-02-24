@@ -19,17 +19,6 @@ class Transactions extends AbstractRequest
             'condition' => 'complete',
             'verbose' => true,
         ];
-
-        //Batch details... not really helpful since there are no transactions
-        /*return [
-            'username' => $this->getUsername(),
-            'password' => $this->getPassword(),
-            'date' => $this->getDate(),
-            //'date' => "20210508",
-            'report_type' => 'settlement_batch',
-            'verbose' => true,
-            'status' => 'settled' //settled, not_settled
-        ];*/
     }
 
     protected function getResponseBody($httpResponse) {
@@ -39,7 +28,7 @@ class Transactions extends AbstractRequest
 
     public function getStartDate()
     {
-        return $this->verifyAndFixDate($this->getParameter('startDate'));;
+        return $this->verifyAndFixDate($this->getParameter('startDate'));
     }
 
     public function setStartDate($value)
@@ -49,14 +38,24 @@ class Transactions extends AbstractRequest
 
     public function getEndDate()
     {
-        return $this->verifyAndFixDate($this->getParameter('endDate'));;
+        return $this->verifyAndFixDate($this->getParameter('endDate'));
     }
+
 
     public function setEndDate($value)
     {
         return $this->setParameter('endDate', $value);
     }
 
+    public function getBatchNumber()
+    {
+        return $this->getParameter('batchNumber');
+    }
+
+    public function setBatchNumber($value)
+    {
+        return $this->setParameter('batchNumber', $value);
+    }
 
     private function verifyAndFixDate($date)
     {

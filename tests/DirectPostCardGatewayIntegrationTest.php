@@ -433,7 +433,7 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         $this->gateway->setPassword("2020apiTHEREF");
 
         $requestData = [
-           'transactionReference' => '5593854806'
+            'transactionReference' => '5593854806'
         ];
 
         $response = $this->gateway->transaction($requestData)->send();
@@ -490,13 +490,50 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
             $this->assertNotNull($transaction['isVoided']);
             $this->assertNotEmpty($transaction['transactionId']);
             $this->assertTrue(is_string($transaction['state']));
-            if($transaction['transactionType'] === 'SETTLED') {
+            if ($transaction['transactionType'] === 'SETTLED') {
                 $this->assertNotNull($transaction['batchNumber']);
                 $this->assertTrue(is_string($transaction['settlementDate']));
             } else {
                 $this->assertNull($transaction['settlementDate']);
                 $this->assertNull($transaction['batchNumber']);
             }
+        }
+    }
+
+    public function testTransactionsByBatchNumber()
+    {
+        $this->gateway->setUsername("pilgrim-API");
+        $this->gateway->setPassword("sdOVDNPX1D8yx6");
+
+        $requestData = [
+            'startDate' => '2024-02-19',
+            'endDate' => '2024-02-19',
+            'batchNumber' => '686770537',
+        ];
+
+        $response = $this->gateway->transactions($requestData)->send();
+        $this->assertTrue($response->isSuccessful());
+        self::assertCount(9, $response->getTransactions());
+        foreach ($response->getTransactions() as $transaction) {
+            $this->assertTrue(is_string($transaction['transactionType']));
+            $this->assertNotEmpty($transaction['message']);
+            $this->assertGreaterThan(1, $transaction['code']);
+            $this->assertGreaterThan(40, $transaction['data']);
+            $this->assertArrayHasKey('action', $transaction['data']);
+            $this->assertTrue(is_array($transaction['data']));
+            $this->assertTrue(is_array($transaction['data']['action']));
+            $this->assertNull($transaction['cardReference']);
+            $this->assertNotNull($transaction['transactionReference']);
+            $this->assertGreaterThan('0.00', $transaction['amount']);
+            $this->assertNotNull($transaction['canRefund']);
+            $this->assertNotNull($transaction['isPending']);
+            $this->assertNotNull($transaction['canVoid']);
+            $this->assertNotNull($transaction['isRefunded']);
+            $this->assertNotNull($transaction['isVoided']);
+            $this->assertNotEmpty($transaction['transactionId']);
+            $this->assertTrue(is_string($transaction['state']));
+            $this->assertStringContainsString($requestData['startDate'], $transaction['settlementDate']);
+            $this->assertEquals($requestData['batchNumber'], $transaction['batchNumber']);
         }
     }
 

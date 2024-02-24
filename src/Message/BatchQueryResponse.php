@@ -39,8 +39,12 @@ class BatchQueryResponse extends AbstractResponse
 
     public function getTransactions()
     {
+        $batchNumber = $this->getRequest()->getBatchNumber();
         $formattedData = [];
         foreach ($this->getData() as $transaction) {
+            if($batchNumber !== null && $transaction->getBatchNumber() !== $batchNumber) {
+                continue;
+            }
             $formattedTransaction = $transaction->data;
             $formattedTransaction['transactionType'] = $transaction->getTransactionType();
             $formattedTransaction['isSuccessful'] = $transaction->isSuccessful();
@@ -71,7 +75,6 @@ class BatchQueryResponse extends AbstractResponse
             $formattedTransaction['isCancelled'] = $transaction->isCancelled();
             $formattedTransaction['data'] = $transaction->getData();
             $formattedTransaction['transactionId'] = $transaction->getTransactionId();
-            //$formattedTransaction['actions'] = $transaction->actions;
             $formattedData[] = $formattedTransaction;
         }
         return $formattedData;
