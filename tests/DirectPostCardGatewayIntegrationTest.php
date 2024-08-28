@@ -66,6 +66,26 @@ class DirectPostCardGatewayIntegrationTest extends GatewayTestCase
         return $response->getCardReference();
     }
 
+    public function testUpdateCardSuccess()
+    {
+        $requestOptions = [
+            'cardReference' => $this->testCreateCardSuccess(),
+            'card' => [
+                'firstName' => 'Updated',
+                'lastName' => 'Name',
+                'email' => 'email@emailasdfasdf.com',
+                'number' => '4242424242424242',
+                'expiryMonth' => rand(1, 12),
+                'expiryYear' => gmdate('Y') + rand(1, 5),
+            ]
+        ];
+        $response = $this->gateway->updateCard($requestOptions)->send();
+
+        $this->assertTrue($response->isSuccessful());
+        $this->assertEquals('Customer Update Successful', $response->getMessage());
+        $this->assertEquals($requestOptions['cardReference'], $response->getCardReference());
+    }
+
     /**
      * Test a purchase transaction followed by a refund
      */

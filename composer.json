@@ -39,7 +39,8 @@
         "php-http/guzzle6-adapter": "^2.0"
     },
     "require-dev": {
-        "omnipay/tests": "^4.1"
+        "omnipay/tests": "^4.1",
+        "http-interop/http-factory-guzzle": "^1.2"
     },
     "extra": {
         "branch-alias": {
@@ -47,5 +48,10 @@
         }
   },
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
 }
